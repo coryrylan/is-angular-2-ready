@@ -1,14 +1,17 @@
 {
-    "compilerOptions": {
-        "emitDecoratorMetadata": true,
-        "module": "commonjs",
-        "target": "es5"
-    },
-    "files": [
-        "app/app.ts",
-        "app/services/data.service.ts",
-        "app/components/ui-dropdown/ui-dropdown.component.ts",
-        "app/components/ui-progress/ui-progress.component.ts",
-        "typings/tsd.d.ts"
-    ]
+  "compilerOptions": {
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "noLib": false,
+    "removeComments": true,
+    "target": "es5"
+  },
+  "files": [
+    "app/**/*.ts",
+    "typings/**/*.d.ts"
+  ],
+  "version": "1.5.3"
 }

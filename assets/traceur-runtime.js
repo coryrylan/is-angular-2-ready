@@ -1,4 +1,4 @@
-(function(global) {
+﻿(function(global) {
   'use strict';
   if (global.$traceurRuntime) {
     return ;

@@ -1,0 +1,22 @@
+{
+  "name": "ng2ready",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-help": "^1.6.0",
+    "gulp-tslint": "^3.1.1-beta",
+    "gulp-typescript": "*",
+    "typescript": "^1.5.3"
+  }
+}
