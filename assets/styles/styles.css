@@ -492,7 +492,7 @@ body {
 
 main, .temp-main {
     text-align: center;
-    padding: 14px;
+    padding: 14px 14px 0 14px;
     max-width: 660px;
     margin: 0 auto;
 }
@@ -535,9 +535,9 @@ a {
     }
 
 
-        .milestones-list > li:first-of-type {
-            margin-top: 30px;
-        }
+    .milestones-list > li:first-of-type {
+        margin-top: 30px;
+    }
 
 .float-left {
     float: left;
@@ -552,11 +552,17 @@ a {
 }
 
 footer {
-    margin-bottom: 48px;
+    margin: 0 auto 48px auto;
+    max-width: 660px;
+    padding: 0 14px;
 }
 
 .ads {
     max-width: 512px;
     width: 100%;
     margin: 60px auto;
+}
+
+.twitter-share-button {
+    float: left;
 }
