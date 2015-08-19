@@ -490,7 +490,7 @@ body {
     font-weight: 300;
 }
 
-main {
+main, .temp-main {
     text-align: center;
     padding: 14px;
     max-width: 660px;
@@ -553,4 +553,11 @@ a {
 
 footer {
     margin-bottom: 48px;
+}
+
+.ads {
+    max-width: 512px;
+    width: 100%;
+    margin: 60px auto;
+    background-color: #ccc;
 }
