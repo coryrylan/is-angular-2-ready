@@ -1,4 +1,3 @@
-/// <reference path="../typings/angular2/angular2.d.ts" />
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target, key, desc);
     switch (arguments.length) {
@@ -6,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
         case 3: return decorators.reduceRight(function(o, d) { return (d && d(target, key)), void 0; }, void 0);
         case 4: return decorators.reduceRight(function(o, d) { return (d && d(target, key, o)) || o; }, desc);
     }
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var angular2_1 = require('angular2/angular2');
 var ui_progress_component_1 = require('app/components/ui-progress/ui-progress.component');
@@ -25,7 +27,8 @@ var MyAppComponent = (function () {
         angular2_1.View({
             templateUrl: 'app/app.html',
             directives: [angular2_1.NgFor, ui_progress_component_1.UIProgress]
-        })
+        }), 
+        __metadata('design:paramtypes', [])
     ], MyAppComponent);
     return MyAppComponent;
 })();

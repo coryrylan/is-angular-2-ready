@@ -15,6 +15,7 @@ gulp.task('build.typescript', 'Build TypeScript and compile out ES5 JavaScript',
                           target: 'ES5',
                           declarationFiles: false,
                           experimentalDecorators: true,
+                          emitDecoratorMetadata: true,
                           module: 'commonjs'
                       }));
 

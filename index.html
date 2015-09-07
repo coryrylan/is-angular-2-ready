@@ -26,14 +26,14 @@
             <h2>Nope. Angular 2 is not ready for production applications.</h2>
             <p class="message">
                 <a href="https://angularjs.org" target="_blank">Angular 1.x</a> is ready and recommended for production apps. <a href="https://angular.io" target="_blank">Angular 2.0</a> is in alpha and
-                is actively changing. Below are the current active <a href="https://github.com/angular/angular/milestones" target="_blank">milestones</a> on <a href="https://github.com/angular/angular" target="_blank">Github</a>.
-                Once Angular is out of Alpha it will go into Beta and be ready for developers to give feed back before the 2.0 release.
+                is actively changing. Once Angular is out of Alpha it will go into Beta and be ready for developers to give feed back before the 2.0 release.
+                The current active <a href="https://github.com/angular/angular/milestones" target="_blank">milestones</a> can be found on <a href="https://github.com/angular/angular" target="_blank">Github</a>.
             </p>
         </div>
     </not-ready>
     <footer class="text-center">
         <a href="https://twitter.com/share" class="twitter-share-button" data-via="SplinterCode" data-size="large" data-hashtags="angular2,angularjs">Tweet</a>
-        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+        <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');</script>
 
         <a href="https://twitter.com/SplinterCode" class="float-right">Built by Cory Rylan</a>
         <br />
@@ -50,10 +50,21 @@
             </script>
         </div>
     </footer>
-    <script src="assets/fetch.js?v=1.0"></script>
-    <script src="assets/traceur-runtime.js?v=1.0"></script>
-    <script src="assets/system.js?v=1.0"></script>
-    <script src="assets/angular2.dev.js?v=1.0"></script>
-    <script>System.import('app/app');</script>
+    <script src="assets/javascript/fetch.js?v=1.1"></script>
+    <script src="assets/javascript/traceur-runtime.0.0.91.js?v=1.1"></script>
+    <script src="assets/javascript/system.js?v=1.1"></script>
+    <script src="assets/javascript/angular/angular2.dev-alpha.36.js?v=1.1"></script>
+    <script>
+        System.config({
+            paths: {
+                '*': '*.js?v=1.1',
+                'rx': 'rx',
+                'angular2/*': 'angular2/*',
+                'app/*': 'app/*.js?v=1.1'
+            }
+        });
+
+        System.import('app/app');
+    </script>
 </body>
 </html>
