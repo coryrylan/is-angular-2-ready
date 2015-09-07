@@ -1,48 +1,49 @@
-declare let Zone;
-declare let fetch;
-declare let Promise;
+import {Injectable} from 'angular2/angular2';
 
-let dataService = (function () {
-    let data = {
-        milestones: [],
-        slimMilestones: []
+@Injectable()
+export class DataService {
+    data: {
+        milestones: Array<any>,
+        slimMilestones: Array<any>,
     };
 
-    return {
-        data: data,
-        loadMilestones: loadMilestones
+    constructor() {
+        this.data = {
+            milestones: [],
+            slimMilestones: []
+        };
     }
 
-	function loadMilestones() {
-        return Zone.bindPromiseFn(fetch)('https://api.github.com/repos/angular/angular/milestones')
-            .then(status)
-            .then(json)
-            .then(function (d) {
-                data.milestones = d;
-                updateSlimMilestones();
-        }).catch(error => console.log('Request failed', error));
+    loadMilestones() {
+        return window.fetch('https://api.github.com/repos/angular/angular/milestones')
+            .then(this._status)
+            .then(this._json)
+            .then(d => {
+                this.data.milestones = d;
+                this._updateSlimMilestones();
+            }).catch(error => console.log('Request failed', error));
     }
-  
-    function updateSlimMilestones() {
-        data.milestones.forEach(milestone => {
+
+    _updateSlimMilestones() {
+        this.data.milestones.forEach(milestone => {
             let total = milestone.closed_issues + milestone.open_issues;
             let completion = (milestone.closed_issues / total) * 100;
-    
-            if(isNaN(completion)) {
+
+            if (isNaN(completion)) {
                 completion = 0;
             }
-        
-            data.slimMilestones.push({ 
-              completion: completion.toFixed(0),
-              title: milestone.title,
-              open_issues: milestone.open_issues,
-              closed_issues: milestone.closed_issues,
-              description: milestone.description
+
+            this.data.slimMilestones.push({
+                completion: completion.toFixed(0),
+                title: milestone.title,
+                open_issues: milestone.open_issues,
+                closed_issues: milestone.closed_issues,
+                description: milestone.description
             });
         });
     }
-  
-    function status(response) {
+
+    _status(response) {
         if (response.status >= 200 && response.status < 300) {
             return Promise.resolve(response);
         } else {
@@ -50,9 +51,7 @@ let dataService = (function () {
         }
     }
 
-    function json(response) {
-      return response.json();
+    _json(response) {
+        return response.json();
     }
-} ());
-
-export default dataService;
+}
