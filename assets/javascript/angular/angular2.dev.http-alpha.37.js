@@ -4062,10 +4062,11 @@ System.register("rx", [], true, function(require, exports, module) {
   return module.exports;
 });
 
-System.register("angular2/src/facade/lang", [], function($__export) {
+System.register("angular2/src/core/facade/lang", [], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/facade/lang";
-  var _global,
+  var __moduleName = "angular2/src/core/facade/lang";
+  var globalScope,
+      _global,
       Type,
       BaseException,
       Math,
@@ -4090,9 +4091,6 @@ System.register("angular2/src/facade/lang", [], function($__export) {
   function assertionsEnabled() {
     return assertionsEnabled_;
   }
-  function ENUM_INDEX(value) {
-    return value;
-  }
   function CONST_EXPR(expr) {
     return expr;
   }
@@ -4102,11 +4100,6 @@ System.register("angular2/src/facade/lang", [], function($__export) {
     });
   }
   function ABSTRACT() {
-    return (function(t) {
-      return t;
-    });
-  }
-  function IMPLEMENTS(_) {
     return (function(t) {
       return t;
     });
@@ -4183,14 +4176,25 @@ System.register("angular2/src/facade/lang", [], function($__export) {
       console.log(obj);
     }
   }
+  function setValueOnPath(global, path, value) {
+    var parts = path.split('.');
+    var obj = global;
+    while (parts.length > 1) {
+      var name = parts.shift();
+      if (obj.hasOwnProperty(name)) {
+        obj = obj[name];
+      } else {
+        obj = obj[name] = {};
+      }
+    }
+    obj[parts.shift()] = value;
+  }
   $__export("getTypeNameForDebugging", getTypeNameForDebugging);
   $__export("makeTypeError", makeTypeError);
   $__export("assertionsEnabled", assertionsEnabled);
-  $__export("ENUM_INDEX", ENUM_INDEX);
   $__export("CONST_EXPR", CONST_EXPR);
   $__export("CONST", CONST);
   $__export("ABSTRACT", ABSTRACT);
-  $__export("IMPLEMENTS", IMPLEMENTS);
   $__export("isPresent", isPresent);
   $__export("isBlank", isBlank);
   $__export("isString", isString);
@@ -4210,10 +4214,21 @@ System.register("angular2/src/facade/lang", [], function($__export) {
   $__export("normalizeBool", normalizeBool);
   $__export("isJsObject", isJsObject);
   $__export("print", print);
+  $__export("setValueOnPath", setValueOnPath);
   return {
     setters: [],
     execute: function() {
-      _global = (typeof window === 'undefined' ? global : window);
+      if (typeof window === 'undefined') {
+        if (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope) {
+          globalScope = self;
+        } else {
+          globalScope = global;
+        }
+      } else {
+        globalScope = window;
+      }
+      ;
+      _global = globalScope;
       $__export("global", _global);
       Type = Function;
       $__export("Type", Type);
@@ -4468,9 +4483,9 @@ System.register("angular2/src/facade/lang", [], function($__export) {
   };
 });
 
-System.register("angular2/src/util/decorators", ["angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/core/util/decorators", ["angular2/src/core/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/util/decorators";
+  var __moduleName = "angular2/src/core/util/decorators";
   var global,
       isFunction,
       stringify,
@@ -4612,9 +4627,9 @@ System.register("angular2/src/util/decorators", ["angular2/src/facade/lang"], fu
   };
 });
 
-System.register("angular2/src/di/forward_ref", ["angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/core/di/forward_ref", ["angular2/src/core/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/di/forward_ref";
+  var __moduleName = "angular2/src/core/di/forward_ref";
   var stringify,
       isFunction;
   function forwardRef(forwardRefFn) {
@@ -4643,15 +4658,14 @@ System.register("angular2/src/di/forward_ref", ["angular2/src/facade/lang"], fun
   };
 });
 
-System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/core/facade/collection", ["angular2/src/core/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/facade/collection";
+  var __moduleName = "angular2/src/core/facade/collection";
   var isJsObject,
       global,
       isPresent,
       isBlank,
       isArray,
-      List,
       Map,
       Set,
       StringMap,
@@ -4693,8 +4707,6 @@ System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], 
       isArray = $__m.isArray;
     }],
     execute: function() {
-      List = global.Array;
-      $__export("List", List);
       Map = global.Map;
       $__export("Map", Map);
       Set = global.Set;
@@ -4763,7 +4775,7 @@ System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], 
           var res = ListWrapper.createFixedSize(m.size),
               i = 0;
           m.forEach((function(v, k) {
-            ListWrapper.set(res, i, getValues ? v : k);
+            res[i] = getValues ? v : k;
             i++;
           }));
           return res;
@@ -4889,16 +4901,10 @@ System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], 
         function ListWrapper() {}
         return ($traceurRuntime.createClass)(ListWrapper, {}, {
           createFixedSize: function(size) {
-            return new List(size);
+            return new Array(size);
           },
           createGrowableSize: function(size) {
-            return new List(size);
-          },
-          get: function(m, k) {
-            return m[k];
-          },
-          set: function(m, k, v) {
-            m[k] = v;
+            return new Array(size);
           },
           clone: function(array) {
             return array.slice(0);
@@ -5088,9 +5094,9 @@ System.register("angular2/src/facade/collection", ["angular2/src/facade/lang"], 
   };
 });
 
-System.register("angular2/src/reflection/reflector", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
+System.register("angular2/src/core/reflection/reflector", ["angular2/src/core/facade/lang", "angular2/src/core/facade/collection"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/reflection/reflector";
+  var __moduleName = "angular2/src/core/reflection/reflector";
   var isPresent,
       BaseException,
       ListWrapper,
@@ -5231,6 +5237,9 @@ System.register("angular2/src/reflection/reflector", ["angular2/src/facade/lang"
           },
           _containsReflectionInfo: function(typeOrFunc) {
             return this._injectableInfo.has(typeOrFunc);
+          },
+          importUri: function(type) {
+            return this.reflectionCapabilities.importUri(type);
           }
         }, {});
       }());
@@ -5239,9 +5248,9 @@ System.register("angular2/src/reflection/reflector", ["angular2/src/facade/lang"
   };
 });
 
-System.register("angular2/src/reflection/reflection_capabilities", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
+System.register("angular2/src/core/reflection/reflection_capabilities", ["angular2/src/core/facade/lang", "angular2/src/core/facade/collection"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/reflection/reflection_capabilities";
+  var __moduleName = "angular2/src/core/reflection/reflection_capabilities";
   var isPresent,
       isFunction,
       global,
@@ -5419,6 +5428,9 @@ System.register("angular2/src/reflection/reflection_capabilities", ["angular2/sr
           method: function(name) {
             var functionBody = ("if (!o." + name + ") throw new Error('\"" + name + "\" is undefined');\n        return o." + name + ".apply(o, args);");
             return new Function('o', 'args', functionBody);
+          },
+          importUri: function(type) {
+            return './';
           }
         }, {});
       }());
@@ -5427,9 +5439,9 @@ System.register("angular2/src/reflection/reflection_capabilities", ["angular2/sr
   };
 });
 
-System.register("angular2/src/di/type_literal", [], function($__export) {
+System.register("angular2/src/core/di/type_literal", [], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/di/type_literal";
+  var __moduleName = "angular2/src/core/di/type_literal";
   var TypeLiteral;
   return {
     setters: [],
@@ -5445,9 +5457,9 @@ System.register("angular2/src/di/type_literal", [], function($__export) {
   };
 });
 
-System.register("angular2/src/di/exceptions", ["angular2/src/facade/collection", "angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/core/di/exceptions", ["angular2/src/core/facade/collection", "angular2/src/core/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/di/exceptions";
+  var __moduleName = "angular2/src/core/di/exceptions";
   var ListWrapper,
       stringify,
       BaseException,
@@ -5588,9 +5600,9 @@ System.register("angular2/src/di/exceptions", ["angular2/src/facade/collection",
   };
 });
 
-System.register("angular2/src/di/opaque_token", ["angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/core/di/opaque_token", ["angular2/src/core/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/di/opaque_token";
+  var __moduleName = "angular2/src/core/di/opaque_token";
   var __decorate,
       __metadata,
       CONST,
@@ -5633,9 +5645,9 @@ System.register("angular2/src/di/opaque_token", ["angular2/src/facade/lang"], fu
   };
 });
 
-System.register("http/src/url_search_params", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
+System.register("angular2/src/http/url_search_params", ["angular2/src/core/facade/lang", "angular2/src/core/facade/collection"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/url_search_params";
+  var __moduleName = "angular2/src/http/url_search_params";
   var CONST_EXPR,
       isPresent,
       StringWrapper,
@@ -5652,8 +5664,8 @@ System.register("http/src/url_search_params", ["angular2/src/facade/lang", "angu
       var params = StringWrapper.split(rawParams, new RegExp('&'));
       ListWrapper.forEach(params, (function(param) {
         var split = StringWrapper.split(param, new RegExp('='));
-        var key = ListWrapper.get(split, 0);
-        var val = ListWrapper.get(split, 1);
+        var key = split[0];
+        var val = split[1];
         var list = isPresent(map.get(key)) ? map.get(key) : [];
         list.push(val);
         map.set(key, list);
@@ -5767,9 +5779,9 @@ System.register("http/src/url_search_params", ["angular2/src/facade/lang", "angu
   };
 });
 
-System.register("http/src/headers", ["angular2/src/facade/lang", "angular2/src/facade/collection"], function($__export) {
+System.register("angular2/src/http/headers", ["angular2/src/core/facade/lang", "angular2/src/core/facade/collection"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/headers";
+  var __moduleName = "angular2/src/http/headers";
   var isBlank,
       BaseException,
       isListLikeIterable,
@@ -5859,14 +5871,13 @@ System.register("http/src/headers", ["angular2/src/facade/lang", "angular2/src/f
   };
 });
 
-System.register("http/src/enums", [], function($__export) {
+System.register("angular2/src/http/enums", [], function($__export) {
   "use strict";
-  var __moduleName = "http/src/enums";
+  var __moduleName = "angular2/src/http/enums";
   var RequestModesOpts,
       RequestCacheOpts,
       RequestCredentialsOpts,
       RequestMethods,
-      RequestMethodsMap,
       ReadyStates,
       ResponseTypes;
   return {
@@ -5895,31 +5906,22 @@ System.register("http/src/enums", [], function($__export) {
       })(RequestCredentialsOpts || ($__export("RequestCredentialsOpts", RequestCredentialsOpts = {})));
       $__export("RequestMethods", RequestMethods);
       (function(RequestMethods) {
-        RequestMethods[RequestMethods["GET"] = 0] = "GET";
-        RequestMethods[RequestMethods["POST"] = 1] = "POST";
-        RequestMethods[RequestMethods["PUT"] = 2] = "PUT";
-        RequestMethods[RequestMethods["DELETE"] = 3] = "DELETE";
-        RequestMethods[RequestMethods["OPTIONS"] = 4] = "OPTIONS";
-        RequestMethods[RequestMethods["HEAD"] = 5] = "HEAD";
-        RequestMethods[RequestMethods["PATCH"] = 6] = "PATCH";
+        RequestMethods[RequestMethods["Get"] = 0] = "Get";
+        RequestMethods[RequestMethods["Post"] = 1] = "Post";
+        RequestMethods[RequestMethods["Put"] = 2] = "Put";
+        RequestMethods[RequestMethods["Delete"] = 3] = "Delete";
+        RequestMethods[RequestMethods["Options"] = 4] = "Options";
+        RequestMethods[RequestMethods["Head"] = 5] = "Head";
+        RequestMethods[RequestMethods["Patch"] = 6] = "Patch";
       })(RequestMethods || ($__export("RequestMethods", RequestMethods = {})));
-      RequestMethodsMap = (function() {
-        function RequestMethodsMap() {
-          this._methods = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD', 'PATCH'];
-        }
-        return ($traceurRuntime.createClass)(RequestMethodsMap, {getMethod: function(method) {
-            return this._methods[method];
-          }}, {});
-      }());
-      $__export("RequestMethodsMap", RequestMethodsMap);
       $__export("ReadyStates", ReadyStates);
       (function(ReadyStates) {
-        ReadyStates[ReadyStates["UNSENT"] = 0] = "UNSENT";
-        ReadyStates[ReadyStates["OPEN"] = 1] = "OPEN";
-        ReadyStates[ReadyStates["HEADERS_RECEIVED"] = 2] = "HEADERS_RECEIVED";
-        ReadyStates[ReadyStates["LOADING"] = 3] = "LOADING";
-        ReadyStates[ReadyStates["DONE"] = 4] = "DONE";
-        ReadyStates[ReadyStates["CANCELLED"] = 5] = "CANCELLED";
+        ReadyStates[ReadyStates["Unsent"] = 0] = "Unsent";
+        ReadyStates[ReadyStates["Open"] = 1] = "Open";
+        ReadyStates[ReadyStates["HeadersReceived"] = 2] = "HeadersReceived";
+        ReadyStates[ReadyStates["Loading"] = 3] = "Loading";
+        ReadyStates[ReadyStates["Done"] = 4] = "Done";
+        ReadyStates[ReadyStates["Cancelled"] = 5] = "Cancelled";
       })(ReadyStates || ($__export("ReadyStates", ReadyStates = {})));
       $__export("ResponseTypes", ResponseTypes);
       (function(ResponseTypes) {
@@ -5933,9 +5935,9 @@ System.register("http/src/enums", [], function($__export) {
   };
 });
 
-System.register("http/src/http_utils", ["angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/http/http_utils", ["angular2/src/core/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/http_utils";
+  var __moduleName = "angular2/src/http/http_utils";
   return {
     setters: [function($__m) {
       $__export("isJsObject", $__m.isJsObject);
@@ -5944,9 +5946,9 @@ System.register("http/src/http_utils", ["angular2/src/facade/lang"], function($_
   };
 });
 
-System.register("http/src/base_response_options", ["angular2/di", "angular2/src/facade/lang", "http/src/headers", "http/src/enums"], function($__export) {
+System.register("angular2/src/http/base_response_options", ["angular2/di", "angular2/src/core/facade/lang", "angular2/src/http/headers", "angular2/src/http/enums"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/base_response_options";
+  var __moduleName = "angular2/src/http/base_response_options";
   var __decorate,
       __metadata,
       Injectable,
@@ -6033,9 +6035,9 @@ System.register("http/src/base_response_options", ["angular2/di", "angular2/src/
   };
 });
 
-System.register("http/src/backends/browser_xhr", ["angular2/di"], function($__export) {
+System.register("angular2/src/http/backends/browser_xhr", ["angular2/di"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/backends/browser_xhr";
+  var __moduleName = "angular2/src/http/backends/browser_xhr";
   var __decorate,
       __metadata,
       Injectable,
@@ -6076,9 +6078,9 @@ System.register("http/src/backends/browser_xhr", ["angular2/di"], function($__ex
   };
 });
 
-System.register("http/src/backends/browser_jsonp", ["angular2/di", "angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/http/backends/browser_jsonp", ["angular2/di", "angular2/src/core/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/backends/browser_jsonp";
+  var __moduleName = "angular2/src/http/backends/browser_jsonp";
   var __decorate,
       __metadata,
       Injectable,
@@ -6161,20 +6163,17 @@ System.register("http/src/backends/browser_jsonp", ["angular2/di", "angular2/src
   };
 });
 
-System.register("http/src/backends/mock_backend", ["angular2/di", "http/src/static_request", "http/src/enums", "http/src/interfaces", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/http/backends/mock_backend", ["angular2/di", "angular2/src/http/static_request", "angular2/src/http/enums", "angular2/src/core/facade/async", "angular2/src/core/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/backends/mock_backend";
+  var __moduleName = "angular2/src/http/backends/mock_backend";
   var __decorate,
       __metadata,
       Injectable,
       Request,
       ReadyStates,
-      Connection,
-      ConnectionBackend,
       ObservableWrapper,
       EventEmitter,
       isPresent,
-      IMPLEMENTS,
       BaseException,
       MockConnection,
       MockBackend;
@@ -6186,14 +6185,10 @@ System.register("http/src/backends/mock_backend", ["angular2/di", "http/src/stat
     }, function($__m) {
       ReadyStates = $__m.ReadyStates;
     }, function($__m) {
-      Connection = $__m.Connection;
-      ConnectionBackend = $__m.ConnectionBackend;
-    }, function($__m) {
       ObservableWrapper = $__m.ObservableWrapper;
       EventEmitter = $__m.EventEmitter;
     }, function($__m) {
       isPresent = $__m.isPresent;
-      IMPLEMENTS = $__m.IMPLEMENTS;
       BaseException = $__m.BaseException;
     }],
     execute: function() {
@@ -6219,33 +6214,35 @@ System.register("http/src/backends/mock_backend", ["angular2/di", "http/src/stat
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
           return Reflect.metadata(k, v);
       };
-      MockConnection = (($traceurRuntime.createClass)(function(req) {
-        this.response = new EventEmitter();
-        this.readyState = ReadyStates.OPEN;
-        this.request = req;
-      }, {
-        dispose: function() {
-          if (this.readyState !== ReadyStates.DONE) {
-            this.readyState = ReadyStates.CANCELLED;
-          }
-        },
-        mockRespond: function(res) {
-          if (this.readyState === ReadyStates.DONE || this.readyState === ReadyStates.CANCELLED) {
-            throw new BaseException('Connection has already been resolved');
-          }
-          this.readyState = ReadyStates.DONE;
-          ObservableWrapper.callNext(this.response, res);
-          ObservableWrapper.callReturn(this.response);
-        },
-        mockDownload: function(res) {},
-        mockError: function(err) {
-          this.readyState = ReadyStates.DONE;
-          ObservableWrapper.callThrow(this.response, err);
-          ObservableWrapper.callReturn(this.response);
+      MockConnection = (function() {
+        function MockConnection(req) {
+          this.response = new EventEmitter();
+          this.readyState = ReadyStates.Open;
+          this.request = req;
         }
-      }, {}));
+        return ($traceurRuntime.createClass)(MockConnection, {
+          dispose: function() {
+            if (this.readyState !== ReadyStates.Done) {
+              this.readyState = ReadyStates.Cancelled;
+            }
+          },
+          mockRespond: function(res) {
+            if (this.readyState === ReadyStates.Done || this.readyState === ReadyStates.Cancelled) {
+              throw new BaseException('Connection has already been resolved');
+            }
+            this.readyState = ReadyStates.Done;
+            ObservableWrapper.callNext(this.response, res);
+            ObservableWrapper.callReturn(this.response);
+          },
+          mockDownload: function(res) {},
+          mockError: function(err) {
+            this.readyState = ReadyStates.Done;
+            ObservableWrapper.callThrow(this.response, err);
+            ObservableWrapper.callReturn(this.response);
+          }
+        }, {});
+      }());
       $__export("MockConnection", MockConnection);
-      $__export("MockConnection", MockConnection = __decorate([IMPLEMENTS(Connection), __metadata('design:paramtypes', [Request])], MockConnection));
       MockBackend = (($traceurRuntime.createClass)(function() {
         var $__0 = this;
         this.connectionsArray = [];
@@ -6278,14 +6275,14 @@ System.register("http/src/backends/mock_backend", ["angular2/di", "http/src/stat
         }
       }, {}));
       $__export("MockBackend", MockBackend);
-      $__export("MockBackend", MockBackend = __decorate([Injectable(), IMPLEMENTS(ConnectionBackend), __metadata('design:paramtypes', [])], MockBackend));
+      $__export("MockBackend", MockBackend = __decorate([Injectable(), __metadata('design:paramtypes', [])], MockBackend));
     }
   };
 });
 
-System.register("angular2/src/di/metadata", ["angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/core/di/metadata", ["angular2/src/core/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/di/metadata";
+  var __moduleName = "angular2/src/core/di/metadata";
   var __decorate,
       __metadata,
       CONST,
@@ -6364,9 +6361,9 @@ System.register("angular2/src/di/metadata", ["angular2/src/facade/lang"], functi
   };
 });
 
-System.register("angular2/src/di/decorators", ["angular2/src/di/metadata", "angular2/src/util/decorators"], function($__export) {
+System.register("angular2/src/core/di/decorators", ["angular2/src/core/di/metadata", "angular2/src/core/util/decorators"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/di/decorators";
+  var __moduleName = "angular2/src/core/di/decorators";
   var InjectMetadata,
       OptionalMetadata,
       InjectableMetadata,
@@ -6410,9 +6407,9 @@ System.register("angular2/src/di/decorators", ["angular2/src/di/metadata", "angu
   };
 });
 
-System.register("angular2/src/reflection/reflection", ["angular2/src/reflection/reflector", "angular2/src/reflection/reflection_capabilities"], function($__export) {
+System.register("angular2/src/core/reflection/reflection", ["angular2/src/core/reflection/reflector", "angular2/src/core/reflection/reflection_capabilities"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/reflection/reflection";
+  var __moduleName = "angular2/src/core/reflection/reflection";
   var Reflector,
       ReflectionCapabilities,
       reflector;
@@ -6431,9 +6428,9 @@ System.register("angular2/src/reflection/reflection", ["angular2/src/reflection/
   };
 });
 
-System.register("angular2/src/di/key", ["angular2/src/facade/collection", "angular2/src/facade/lang", "angular2/src/di/type_literal", "angular2/src/di/forward_ref"], function($__export) {
+System.register("angular2/src/core/di/key", ["angular2/src/core/facade/collection", "angular2/src/core/facade/lang", "angular2/src/core/di/type_literal", "angular2/src/core/di/forward_ref"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/di/key";
+  var __moduleName = "angular2/src/core/di/key";
   var MapWrapper,
       stringify,
       isBlank,
@@ -6508,9 +6505,9 @@ System.register("angular2/src/di/key", ["angular2/src/facade/collection", "angul
   };
 });
 
-System.register("http/src/interfaces", ["angular2/src/facade/lang", "http/src/url_search_params"], function($__export) {
+System.register("angular2/src/http/interfaces", ["angular2/src/core/facade/lang", "angular2/src/http/url_search_params"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/interfaces";
+  var __moduleName = "angular2/src/http/interfaces";
   var BaseException,
       URLSearchParamsUnionFixer,
       URLSearchParams_UnionFixer,
@@ -6542,9 +6539,9 @@ System.register("http/src/interfaces", ["angular2/src/facade/lang", "http/src/ur
   };
 });
 
-System.register("http/src/static_request", ["http/src/headers", "angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/http/static_request", ["angular2/src/http/headers", "angular2/src/core/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/static_request";
+  var __moduleName = "angular2/src/http/static_request";
   var Headers,
       isPresent,
       StringWrapper,
@@ -6587,9 +6584,9 @@ System.register("http/src/static_request", ["http/src/headers", "angular2/src/fa
   };
 });
 
-System.register("http/src/base_request_options", ["angular2/src/facade/lang", "http/src/headers", "http/src/enums", "angular2/di", "http/src/url_search_params"], function($__export) {
+System.register("angular2/src/http/base_request_options", ["angular2/src/core/facade/lang", "angular2/src/http/headers", "angular2/src/http/enums", "angular2/di", "angular2/src/http/url_search_params"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/base_request_options";
+  var __moduleName = "angular2/src/http/base_request_options";
   var __decorate,
       __metadata,
       isPresent,
@@ -6675,7 +6672,7 @@ System.register("http/src/base_request_options", ["angular2/src/facade/lang", "h
       BaseRequestOptions = (function($__super) {
         function $__0() {
           $traceurRuntime.superConstructor($__0).call(this, {
-            method: RequestMethods.GET,
+            method: RequestMethods.Get,
             headers: new Headers(),
             mode: RequestModesOpts.Cors
           });
@@ -6688,9 +6685,9 @@ System.register("http/src/base_request_options", ["angular2/src/facade/lang", "h
   };
 });
 
-System.register("http/src/static_response", ["angular2/src/facade/lang", "http/src/http_utils"], function($__export) {
+System.register("angular2/src/http/static_response", ["angular2/src/core/facade/lang", "angular2/src/http/http_utils"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/static_response";
+  var __moduleName = "angular2/src/http/static_response";
   var BaseException,
       isString,
       Json,
@@ -6740,9 +6737,9 @@ System.register("http/src/static_response", ["angular2/src/facade/lang", "http/s
   };
 });
 
-System.register("angular2/src/facade/async", ["angular2/src/facade/lang", "rx"], function($__export) {
+System.register("angular2/src/core/facade/async", ["angular2/src/core/facade/lang", "rx"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/facade/async";
+  var __moduleName = "angular2/src/core/facade/async";
   var global,
       Rx,
       PromiseWrapper,
@@ -6895,9 +6892,9 @@ System.register("angular2/src/facade/async", ["angular2/src/facade/lang", "rx"],
   };
 });
 
-System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_jsonp", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/http/backends/jsonp_backend", ["angular2/src/http/enums", "angular2/src/http/static_response", "angular2/src/http/base_response_options", "angular2/di", "angular2/src/http/backends/browser_jsonp", "angular2/src/core/facade/async", "angular2/src/core/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/backends/jsonp_backend";
+  var __moduleName = "angular2/src/http/backends/jsonp_backend";
   var __decorate,
       __metadata,
       ReadyStates,
@@ -6962,12 +6959,12 @@ System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/
           this._dom = _dom;
           this.baseResponseOptions = baseResponseOptions;
           this._finished = false;
-          if (req.method !== RequestMethods.GET) {
+          if (req.method !== RequestMethods.Get) {
             throw makeTypeError("JSONP requests must use GET request method.");
           }
           this.request = req;
           this.response = new EventEmitter();
-          this.readyState = ReadyStates.LOADING;
+          this.readyState = ReadyStates.Loading;
           this._id = _dom.nextRequestID();
           _dom.exposeConnection(this._id, this);
           var callback = _dom.requestCallback(this._id);
@@ -6979,9 +6976,9 @@ System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/
           }
           var script = this._script = _dom.build(url);
           script.addEventListener('load', (function(event) {
-            if ($__0.readyState === ReadyStates.CANCELLED)
+            if ($__0.readyState === ReadyStates.Cancelled)
               return ;
-            $__0.readyState = ReadyStates.DONE;
+            $__0.readyState = ReadyStates.Done;
             _dom.cleanup(script);
             if (!$__0._finished) {
               ObservableWrapper.callThrow($__0.response, makeTypeError('JSONP injected script did not invoke callback.'));
@@ -6994,9 +6991,9 @@ System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/
             ObservableWrapper.callNext($__0.response, new Response(responseOptions));
           }));
           script.addEventListener('error', (function(error) {
-            if ($__0.readyState === ReadyStates.CANCELLED)
+            if ($__0.readyState === ReadyStates.Cancelled)
               return ;
-            $__0.readyState = ReadyStates.DONE;
+            $__0.readyState = ReadyStates.Done;
             _dom.cleanup(script);
             ObservableWrapper.callThrow($__0.response, error);
           }));
@@ -7006,12 +7003,12 @@ System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/
           finished: function(data) {
             this._finished = true;
             this._dom.removeConnection(this._id);
-            if (this.readyState === ReadyStates.CANCELLED)
+            if (this.readyState === ReadyStates.Cancelled)
               return ;
             this._responseData = data;
           },
           dispose: function() {
-            this.readyState = ReadyStates.CANCELLED;
+            this.readyState = ReadyStates.Cancelled;
             var script = this._script;
             this._script = null;
             if (isPresent(script)) {
@@ -7034,9 +7031,9 @@ System.register("http/src/backends/jsonp_backend", ["http/src/enums", "http/src/
   };
 });
 
-System.register("angular2/src/di/binding", ["angular2/src/facade/lang", "angular2/src/facade/collection", "angular2/src/reflection/reflection", "angular2/src/di/key", "angular2/src/di/metadata", "angular2/src/di/exceptions", "angular2/src/di/forward_ref"], function($__export) {
+System.register("angular2/src/core/di/binding", ["angular2/src/core/facade/lang", "angular2/src/core/facade/collection", "angular2/src/core/reflection/reflection", "angular2/src/core/di/key", "angular2/src/core/di/metadata", "angular2/src/core/di/exceptions", "angular2/src/core/di/forward_ref"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/di/binding";
+  var __moduleName = "angular2/src/core/di/binding";
   var __decorate,
       __metadata,
       Type,
@@ -7275,9 +7272,9 @@ System.register("angular2/src/di/binding", ["angular2/src/facade/lang", "angular
   };
 });
 
-System.register("http/src/http", ["angular2/src/facade/lang", "angular2/src/di/decorators", "http/src/interfaces", "http/src/static_request", "http/src/base_request_options", "http/src/enums"], function($__export) {
+System.register("angular2/src/http/http", ["angular2/src/core/facade/lang", "angular2/src/core/di/decorators", "angular2/src/http/interfaces", "angular2/src/http/static_request", "angular2/src/http/base_request_options", "angular2/src/http/enums"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/http";
+  var __moduleName = "angular2/src/http/http";
   var __decorate,
       __metadata,
       isString,
@@ -7362,29 +7359,29 @@ System.register("http/src/http", ["angular2/src/facade/lang", "angular2/src/di/d
         request: function(url, options) {
           var responseObservable;
           if (isString(url)) {
-            responseObservable = httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
+            responseObservable = httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.Get, url)));
           } else if (url instanceof Request) {
             responseObservable = httpRequest(this._backend, url);
           }
           return responseObservable;
         },
         get: function(url, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url)));
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.Get, url)));
         },
         post: function(url, body, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.POST, url)));
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.Post, url)));
         },
         put: function(url, body, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PUT, url)));
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.Put, url)));
         },
         delete: function(url, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.DELETE, url)));
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.Delete, url)));
         },
         patch: function(url, body, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.PATCH, url)));
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions.merge(new RequestOptions({body: body})), options, RequestMethods.Patch, url)));
         },
         head: function(url, options) {
-          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.HEAD, url)));
+          return httpRequest(this._backend, new Request(mergeOptions(this._defaultOptions, options, RequestMethods.Head, url)));
         }
       }, {}));
       $__export("Http", Http);
@@ -7396,10 +7393,10 @@ System.register("http/src/http", ["angular2/src/facade/lang", "angular2/src/di/d
         return ($traceurRuntime.createClass)($__0, {request: function(url, options) {
             var responseObservable;
             if (isString(url)) {
-              url = new Request(mergeOptions(this._defaultOptions, options, RequestMethods.GET, url));
+              url = new Request(mergeOptions(this._defaultOptions, options, RequestMethods.Get, url));
             }
             if (url instanceof Request) {
-              if (url.method !== RequestMethods.GET) {
+              if (url.method !== RequestMethods.Get) {
                 makeTypeError('JSONP requests must use GET request method.');
               }
               responseObservable = httpRequest(this._backend, url);
@@ -7413,12 +7410,12 @@ System.register("http/src/http", ["angular2/src/facade/lang", "angular2/src/di/d
   };
 });
 
-System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/static_response", "http/src/base_response_options", "angular2/di", "http/src/backends/browser_xhr", "angular2/src/facade/async", "angular2/src/facade/lang"], function($__export) {
+System.register("angular2/src/http/backends/xhr_backend", ["angular2/src/http/enums", "angular2/src/http/static_response", "angular2/src/http/base_response_options", "angular2/di", "angular2/src/http/backends/browser_xhr", "angular2/src/core/facade/async", "angular2/src/core/facade/lang"], function($__export) {
   "use strict";
-  var __moduleName = "http/src/backends/xhr_backend";
+  var __moduleName = "angular2/src/http/backends/xhr_backend";
   var __decorate,
       __metadata,
-      RequestMethodsMap,
+      RequestMethods,
       ResponseTypes,
       Response,
       ResponseOptions,
@@ -7427,12 +7424,11 @@ System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/st
       EventEmitter,
       ObservableWrapper,
       isPresent,
-      ENUM_INDEX,
       XHRConnection,
       XHRBackend;
   return {
     setters: [function($__m) {
-      RequestMethodsMap = $__m.RequestMethodsMap;
+      RequestMethods = $__m.RequestMethods;
       ResponseTypes = $__m.ResponseTypes;
     }, function($__m) {
       Response = $__m.Response;
@@ -7447,7 +7443,6 @@ System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/st
       ObservableWrapper = $__m.ObservableWrapper;
     }, function($__m) {
       isPresent = $__m.isPresent;
-      ENUM_INDEX = $__m.ENUM_INDEX;
     }],
     execute: function() {
       __decorate = (this && this.__decorate) || function(decorators, target, key, desc) {
@@ -7475,11 +7470,10 @@ System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/st
       XHRConnection = (function() {
         function XHRConnection(req, browserXHR, baseResponseOptions) {
           var $__0 = this;
-          var requestMethodsMap = new RequestMethodsMap();
           this.request = req;
           this.response = new EventEmitter();
           this._xhr = browserXHR.build();
-          this._xhr.open(requestMethodsMap.getMethod(ENUM_INDEX(req.method)), req.url);
+          this._xhr.open(RequestMethods[req.method].toUpperCase(), req.url);
           this._xhr.addEventListener('load', (function(_) {
             var response = isPresent($__0._xhr.response) ? $__0._xhr.response : $__0._xhr.responseText;
             var status = $__0._xhr.status === 1223 ? 204 : $__0._xhr.status;
@@ -7530,11 +7524,10 @@ System.register("http/src/backends/xhr_backend", ["http/src/enums", "http/src/st
   };
 });
 
-System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "angular2/src/di/binding", "angular2/src/di/exceptions", "angular2/src/facade/lang", "angular2/src/di/key", "angular2/src/di/forward_ref", "angular2/src/di/metadata"], function($__export) {
+System.register("angular2/src/core/di/injector", ["angular2/src/core/facade/collection", "angular2/src/core/di/binding", "angular2/src/core/di/exceptions", "angular2/src/core/facade/lang", "angular2/src/core/di/key", "angular2/src/core/di/forward_ref", "angular2/src/core/di/metadata"], function($__export) {
   "use strict";
-  var __moduleName = "angular2/src/di/injector";
+  var __moduleName = "angular2/src/core/di/injector";
   var Map,
-      List,
       MapWrapper,
       ListWrapper,
       ResolvedBinding,
@@ -7580,7 +7573,7 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
         resolved = bind(unresolved).toClass(unresolved).resolve();
       } else if (unresolved instanceof Binding) {
         resolved = unresolved.resolve();
-      } else if (unresolved instanceof List) {
+      } else if (unresolved instanceof Array) {
         resolved = _resolveBindings(unresolved);
       } else if (unresolved instanceof BindingBuilder) {
         throw new InvalidBindingError(unresolved.token);
@@ -7598,7 +7591,7 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
     ListWrapper.forEach(bindings, function(b) {
       if (b instanceof ResolvedBinding) {
         res.set(b.key.id, b);
-      } else if (b instanceof List) {
+      } else if (b instanceof Array) {
         _flattenBindings(b, res);
       }
     });
@@ -7614,7 +7607,6 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
   return {
     setters: [function($__m) {
       Map = $__m.Map;
-      List = $__m.List;
       MapWrapper = $__m.MapWrapper;
       ListWrapper = $__m.ListWrapper;
     }, function($__m) {
@@ -8264,7 +8256,7 @@ System.register("angular2/src/di/injector", ["angular2/src/facade/collection", "
   };
 });
 
-System.register("angular2/di", ["angular2/src/di/metadata", "angular2/src/di/decorators", "angular2/src/di/forward_ref", "angular2/src/di/injector", "angular2/src/di/binding", "angular2/src/di/key", "angular2/src/di/exceptions", "angular2/src/di/opaque_token"], function($__export) {
+System.register("angular2/di", ["angular2/src/core/di/metadata", "angular2/src/core/di/decorators", "angular2/src/core/di/forward_ref", "angular2/src/core/di/injector", "angular2/src/core/di/binding", "angular2/src/core/di/key", "angular2/src/core/di/exceptions", "angular2/src/core/di/opaque_token"], function($__export) {
   "use strict";
   var __moduleName = "angular2/di";
   var $__exportNames = {undefined: true};
@@ -8316,9 +8308,9 @@ System.register("angular2/di", ["angular2/src/di/metadata", "angular2/src/di/dec
   };
 });
 
-System.register("http/http", ["angular2/di", "http/src/http", "http/src/backends/xhr_backend", "http/src/backends/jsonp_backend", "http/src/backends/browser_xhr", "http/src/backends/browser_jsonp", "http/src/base_request_options", "http/src/base_response_options", "http/src/backends/mock_backend", "http/src/static_request", "http/src/static_response", "http/src/interfaces", "http/src/headers", "http/src/enums", "http/src/url_search_params"], function($__export) {
+System.register("angular2/http", ["angular2/di", "angular2/src/http/http", "angular2/src/http/backends/xhr_backend", "angular2/src/http/backends/jsonp_backend", "angular2/src/http/backends/browser_xhr", "angular2/src/http/backends/browser_jsonp", "angular2/src/http/base_request_options", "angular2/src/http/base_response_options", "angular2/src/http/backends/mock_backend", "angular2/src/http/static_request", "angular2/src/http/static_response", "angular2/src/http/interfaces", "angular2/src/http/headers", "angular2/src/http/enums", "angular2/src/http/url_search_params"], function($__export) {
   "use strict";
-  var __moduleName = "http/http";
+  var __moduleName = "angular2/http";
   var bind,
       Http,
       Jsonp,
