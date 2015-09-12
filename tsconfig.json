@@ -10,8 +10,9 @@
     "target": "es5"
   },
   "files": [
-    "app/**/*.ts",
-    "typings/**/*.d.ts"
+    "./app/app.ts",
+    "./typings/angular2/angular2.dev-alpha.36.d.ts",
+    "./typings/angular2/angular2.router.dev-alpha.36.d.ts.ts"
   ],
-  "version": "1.5.3"
+  "version": "1.6.0-beta"
 }

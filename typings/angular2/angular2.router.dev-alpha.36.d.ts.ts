@@ -13,7 +13,7 @@
 // If you don't have them installed you can install them using TSD
 // https://github.com/DefinitelyTyped/tsd
 
-///<reference path="./angular2.d.ts"/>
+///<reference path="./angular2.dev-alpha.36.d.ts"/>
 
 
 
