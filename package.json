@@ -20,6 +20,6 @@
     "gulp-typescript": "*",
     "open": "0.0.5",
     "serve-static": "^1.10.0",
-    "typescript": "^1.5.3"
+    "typescript": "^1.6.2"
   }
 }

@@ -1,4 +1,4 @@
-﻿// Type definitions for Jasmine 2.2
+// Type definitions for Jasmine 2.2
 // Project: http://jasmine.github.io/
 // Definitions by: Boris Yankov <https://github.com/borisyankov/>, Theodore Brown <https://github.com/theodorejb>, David Pärsson <https://github.com/davidparsson/>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
@@ -107,6 +107,7 @@ declare module jasmine {
         uninstall(): void;
         /** Calls to any registered callback are triggered when the clock is ticked forward via the jasmine.clock().tick function, which takes a number of milliseconds. */
         tick(ms: number): void;
+        mockDate(date?: Date): void;
     }
 
     interface CustomEqualityTester {
@@ -128,7 +129,7 @@ declare module jasmine {
 
     interface CustomMatcherResult {
         pass: boolean;
-        message: string;
+        message?: string;
     }
 
     interface MatchersUtil {
@@ -211,12 +212,12 @@ declare module jasmine {
         passed(): boolean;
     }
 
-    interface MessageResult extends Result {
+    interface MessageResult extends Result  {
         values: any;
         trace: Trace;
     }
 
-    interface ExpectationResult extends Result {
+    interface ExpectationResult extends Result  {
         matcherName: string;
         passed(): boolean;
         expected: any;
@@ -278,21 +279,22 @@ declare module jasmine {
         isNot?: boolean;
         message(): any;
 
-        toBe(expected: any): boolean;
-        toEqual(expected: any): boolean;
-        toMatch(expected: any): boolean;
-        toBeDefined(): boolean;
-        toBeUndefined(): boolean;
-        toBeNull(): boolean;
+        (expected: any): boolean;
+        toBe(expected: any, expectationFailOutput?: any): boolean;
+        toEqual(expected: any, expectationFailOutput?: any): boolean;
+        toMatch(expected: any, expectationFailOutput?: any): boolean;
+        toBeDefined(expectationFailOutput?: any): boolean;
+        toBeUndefined(expectationFailOutput?: any): boolean;
+        toBeNull(expectationFailOutput?: any): boolean;
         toBeNaN(): boolean;
-        toBeTruthy(): boolean;
-        toBeFalsy(): boolean;
+        toBeTruthy(expectationFailOutput?: any): boolean;
+        toBeFalsy(expectationFailOutput?: any): boolean;
         toHaveBeenCalled(): boolean;
         toHaveBeenCalledWith(...params: any[]): boolean;
-        toContain(expected: any): boolean;
-        toBeLessThan(expected: any): boolean;
-        toBeGreaterThan(expected: any): boolean;
-        toBeCloseTo(expected: any, precision: any): boolean;
+        toContain(expected: any, expectationFailOutput?: any): boolean;
+        toBeLessThan(expected: any, expectationFailOutput?: any): boolean;
+        toBeGreaterThan(expected: any, expectationFailOutput?: any): boolean;
+        toBeCloseTo(expected: any, precision: any, expectationFailOutput?: any): boolean;
         toContainHtml(expected: string): boolean;
         toContainText(expected: string): boolean;
         toThrow(expected?: any): boolean;
@@ -416,6 +418,7 @@ declare module jasmine {
         mostRecentCall: { args: any[]; };
         argsForCall: any[];
         wasCalled: boolean;
+        callCount: number;
     }
 
     interface SpyAnd {
@@ -441,13 +444,20 @@ declare module jasmine {
         /** By chaining the spy with calls.allArgs(), will return the arguments to all calls **/
         allArgs(): any[];
         /** By chaining the spy with calls.all(), will return the context (the this) and arguments passed all calls **/
-        all(): any;
+        all(): CallInfo[];
         /** By chaining the spy with calls.mostRecent(), will return the context (the this) and arguments for the most recent call **/
-        mostRecent(): any;
+        mostRecent(): CallInfo;
         /** By chaining the spy with calls.first(), will return the context (the this) and arguments for the first call **/
-        first(): any;
+        first(): CallInfo;
         /** By chaining the spy with calls.reset(), will clears all tracking for a spy **/
         reset(): void;
+    }
+
+    interface CallInfo {
+        /** The context (the this) for the call */
+        object: any;
+        /** All arguments passed to the call */
+        args: any[];
     }
 
     interface Util {
@@ -485,4 +495,40 @@ declare module jasmine {
     export var HtmlReporter: HtmlReporter;
     export var HtmlSpecFilter: HtmlSpecFilter;
     export var DEFAULT_TIMEOUT_INTERVAL: number;
+
+    export interface GlobalPolluter {
+        describe(description: string, specDefinitions: () => void): void;
+        fdescribe(description: string, specDefinitions: () => void): void;
+        xdescribe(description: string, specDefinitions: () => void): void;
+
+        it(expectation: string, assertion?: () => void): void;
+        it(expectation: string, assertion?: (done: () => void) => void): void;
+        fit(expectation: string, assertion?: () => void): void;
+        fit(expectation: string, assertion?: (done: () => void) => void): void;
+        xit(expectation: string, assertion?: () => void): void;
+        xit(expectation: string, assertion?: (done: () => void) => void): void;
+
+        pending(): void;
+
+        beforeEach(action: () => void): void;
+        beforeEach(action: (done: () => void) => void): void;
+        afterEach(action: () => void): void;
+        afterEach(action: (done: () => void) => void): void;
+
+        beforeAll(action: () => void): void;
+        beforeAll(action: (done: () => void) => void): void;
+        afterAll(action: () => void): void;
+        afterAll(action: (done: () => void) => void): void;
+
+        expect(spy: Function): jasmine.Matchers;
+        expect(actual: any): jasmine.Matchers;
+
+        fail(e?: any): void;
+
+        spyOn(object: any, method: string): jasmine.Spy;
+
+        runs(asyncMethod: Function): void;
+        waitsFor(latchMethod: () => boolean, failureMessage?: string, timeout?: number): void;
+        waits(timeout?: number): void;
+    }
 }

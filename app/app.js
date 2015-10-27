@@ -28,8 +28,9 @@ var App = (function () {
             templateUrl: 'app/app.html',
             directives: [angular2_1.CORE_DIRECTIVES, ui_progress_component_1.UIProgress]
         }), 
-        __metadata('design:paramtypes', [data_service_1.DataService])
+        __metadata('design:paramtypes', [(typeof (_a = typeof data_service_1.DataService !== 'undefined' && data_service_1.DataService) === 'function' && _a) || Object])
     ], App);
     return App;
+    var _a;
 })();
 angular2_1.bootstrap(App, [[data_service_1.DataService]]);

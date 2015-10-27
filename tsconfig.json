@@ -3,16 +3,11 @@
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "module": "commonjs",
+    "module": "system",
     "noImplicitAny": false,
     "noLib": false,
     "removeComments": true,
     "target": "es5"
   },
-  "files": [
-    "./app/app.ts",
-    "./typings/angular2/angular2.dev-alpha.37.d.ts",
-    "./typings/angular2/angular2.router.dev-alpha.37.d.ts.ts"
-  ],
-  "version": "1.6.0-beta"
+  "version": "1.6.2"
 }
