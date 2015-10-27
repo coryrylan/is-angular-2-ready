@@ -3,9 +3,7 @@ import {UIProgress} from 'app/components/ui-progress/ui-progress.component';
 import {DataService} from 'app/services/data.service';
 
 @Component({
-    selector: 'not-ready'
-})
-@View({
+    selector: 'not-ready',
     templateUrl: 'app/app.html',
     directives: [CORE_DIRECTIVES, UIProgress]
 })
@@ -17,7 +15,7 @@ class App {
 
         dataService.loadMilestones().then(milestones => {
             this.milestones = dataService.data.slimMilestones;
-        })
+        });
     }
 }
 

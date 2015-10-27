@@ -31,7 +31,7 @@ gulp.task('build.typescript', DOCS.typescriptBuild, [], () => {
                           declarationFiles: false,
                           experimentalDecorators: true,
                           emitDecoratorMetadata: true,
-                          module: 'commonjs'
+                          module: 'system'
                       }));
 
     return tsResult.js
