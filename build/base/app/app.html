@@ -1,0 +1,19 @@
+<main>
+	<img src="assets/images/shield-large.png" alt="Angular" class="logo" />
+	<h1>Is Angular 2.0 ready?</h1>
+	<h2>Soon!</h2>
+	<p class="message">
+		<a href="https://angularjs.org" target="_blank">Angular 1.x</a> is ready and recommended for production apps. <a href="https://angular.io" target="_blank">Angular 2.0</a> is almost in Beta and 
+		below are the current active <a href="https://github.com/angular/angular/milestones" target="_blank">milestones</a> on <a href="https://github.com/angular/angular" target="_blank">Github</a>.
+		If you are starting a new project using Angular 2 in beta may be possible.
+	</p>
+	<br />
+	<ul class="milestones-list">
+    	<li *ng-for="#milestone of milestones">
+        	<h3 class="float-left">{{milestone.title}}</h3>
+			<div class="float-right">Closed: {{milestone.closed_issues}}  Open: {{milestone.open_issues}}</div>
+			<p>{{milestone.description}}</p>
+			<ui-progress [value]="milestone.completion"></ui-progress>
+    	</li>
+	</ul>
+</main>
