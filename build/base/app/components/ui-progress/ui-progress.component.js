@@ -7,16 +7,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var angular2_1 = require('angular2/angular2');
+var core_1 = require('angular2/core');
 var UIProgress = (function () {
     function UIProgress() {
     }
     UIProgress = __decorate([
-        angular2_1.Component({
+        core_1.Component({
             selector: 'ui-progress',
-            properties: ['value']
-        }),
-        angular2_1.View({
+            inputs: ['value'],
             template: "\n  \t <div class=\"progress\">\n\t     <div class=\"progress-bar progress-bar-danger\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" [style.width]=\"value + '%'\">\n\t       {{value}}%\n\t     </div>\n\t   </div>\n  "
         }), 
         __metadata('design:paramtypes', [])

@@ -7,9 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var angular2_1 = require('angular2/angular2');
-var ui_progress_component_1 = require('app/components/ui-progress/ui-progress.component');
-var data_service_1 = require('app/services/data.service');
+var core_1 = require('angular2/core');
+var browser_1 = require('angular2/platform/browser');
+var ui_progress_component_1 = require('./components/ui-progress/ui-progress.component');
+var data_service_1 = require('./services/data.service');
 var App = (function () {
     function App(dataService) {
         var _this = this;
@@ -19,14 +20,13 @@ var App = (function () {
         });
     }
     App = __decorate([
-        angular2_1.Component({
+        core_1.Component({
             selector: 'not-ready',
-            templateUrl: 'app/app.html?v=1.5',
-            directives: [angular2_1.CORE_DIRECTIVES, ui_progress_component_1.UIProgress]
+            templateUrl: 'app/app.html?v=1.6',
+            directives: [ui_progress_component_1.UIProgress]
         }), 
-        __metadata('design:paramtypes', [(typeof (_a = typeof data_service_1.DataService !== 'undefined' && data_service_1.DataService) === 'function' && _a) || Object])
+        __metadata('design:paramtypes', [data_service_1.DataService])
     ], App);
     return App;
-    var _a;
 })();
-angular2_1.bootstrap(App, [[data_service_1.DataService]]);
+browser_1.bootstrap(App, [[data_service_1.DataService]]);

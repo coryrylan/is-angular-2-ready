@@ -3,7 +3,7 @@
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "module": "system",
+    "module": "commonjs",
     "noImplicitAny": false,
     "noLib": false,
     "removeComments": true,
