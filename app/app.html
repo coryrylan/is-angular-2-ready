@@ -1,19 +1,17 @@
 <main>
-	<img src="assets/images/shield-large.png" alt="Angular" class="logo" />
-	<h1>Is Angular 2.0 ready?</h1>
-	<h2>Soon!</h2>
-	<p class="message">
-		<a href="https://angular.io" target="_blank">Angular 2.0</a> is in Release Candidate Stage. 
-		Below are the current active <a href="https://github.com/angular/angular/milestones" target="_blank">milestones</a> on <a href="https://github.com/angular/angular" target="_blank">Github</a>.
-		If you are starting a new project Angular 2 is a great option.
-	</p>
-	<br />
-	<ul class="milestones-list">
-    	<li *ngFor="#milestone of milestones">
-        	<h3 class="float-left">{{milestone.title}}</h3>
-			<div class="float-right">Closed: {{milestone.closed_issues}}  Open: {{milestone.open_issues}}</div>
-			<p>{{milestone.description}}</p>
-			<ui-progress [value]="milestone.completion"></ui-progress>
-    	</li>
-	</ul>
+  <img src="assets/images/shield-large.png" alt="Angular" class="logo" />
+  <img src="assets/images/shield-large.png" alt="Angular" class="logo" />
+  <h2>Yes Angular 2.0 is ready and has shipped!</h2>
+  <p class="message">
+    To keep track of the next upcoming releases follow the <a href="https://github.com/angular/angular/milestones" target="_blank">milestones</a> on <a href="https://github.com/angular/angular" target="_blank">Github</a>.
+  </p>
+  <br />
+  <ul class="milestones-list">
+    <li *ngFor="#milestone of milestones">
+      <h3 class="float-left">{{milestone.title}}</h3>
+      <div class="float-right">Closed: {{milestone.closed_issues}} Open: {{milestone.open_issues}}</div>
+      <p>{{milestone.description}}</p>
+      <ui-progress [value]="milestone.completion"></ui-progress>
+    </li>
+  </ul>
 </main>

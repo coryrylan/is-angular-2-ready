@@ -1,12 +1,13 @@
 <html>
+
 <head>
-    <title>Is Angular 2 Ready?</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="keywords" content="AngularJS, Angular2, Angular 2.0, Web Components, JavaScript">
-    <meta name="description" content="Is Angular 2 ready for production? Is Angular 2 ready? When will Angular 2 be in beta? See Angular 2 milestones and development progress.">
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-    <script>
+  <title>Is Angular 2 Ready?</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="keywords" content="AngularJS, Angular2, Angular 2.0, Web Components, JavaScript">
+  <meta name="description" content="Is Angular 2 ready for production? Is Angular 2 ready? When will Angular 2 be in beta? See Angular 2 milestones and development progress.">
+  <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+  <script>
         (function (i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
                 (i[r].q = i[r].q || []).push(arguments)
@@ -17,44 +18,39 @@
         ga('create', 'UA-36671151-5', 'auto');
         ga('send', 'pageview');
     </script>
-    <!--<base href="/" />-->
-    <!-- inject:css -->
-    <!-- endinject -->
+  <!--<base href="/" />-->
+  <!-- inject:css -->
+  <!-- endinject -->
 </head>
-<body>
-    <not-ready>
-        <div class="temp-main">
-            <img src="assets/images/shield-large.png" alt="Angular" class="logo" />
-            <h2>Soon! Angular 2 is almost ready, and is in the Release Candidate Stage</h2>
-            <p class="message">
-                <a href="https://angular.io" target="_blank">Angular 2.0</a> is in Release Candidate Stage. 
-                Below are the current active <a href="https://github.com/angular/angular/milestones" target="_blank">milestones</a> on <a href="https://github.com/angular/angular" target="_blank">Github</a>.
-                If you are starting a new project Angular 2 is a great option.
-            </p>
-        </div>
-    </not-ready>
-    <footer class="text-center">
-        <a href="https://twitter.com/share" class="twitter-share-button" data-via="coryrylan" data-size="large" data-hashtags="angular2,angularjs">Tweet</a>
-        <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');</script>
 
-        <a href="https://twitter.com/coryrylan" class="float-right">Built by Cory Rylan</a>
-        <br />
-        <div class="ads">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <!-- http://splintercode.github.io/is-angular-2-ready/ -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-5376316241677971"
-                 data-ad-slot="6839290041"
-                 data-ad-format="auto"></ins>
-            <script>
+<body>
+  <not-ready>
+    <div class="temp-main">
+      <img src="assets/images/shield-large.png" alt="Angular" class="logo" />
+      <h2>Yes Angular 2.0 is ready and has shipped!</h2>
+      <p class="message">
+        To keep track of the next upcoming releases follow the <a href="https://github.com/angular/angular/milestones" target="_blank">milestones</a> on <a href="https://github.com/angular/angular" target="_blank">Github</a>.
+      </p>
+    </div>
+  </not-ready>
+  <footer class="text-center">
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="coryrylan" data-size="large" data-hashtags="angular2,angularjs">Tweet</a>
+    <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');</script>
+
+    <a href="https://twitter.com/coryrylan" class="float-right">Built by Cory Rylan</a>
+    <br />
+    <div class="ads">
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- http://splintercode.github.io/is-angular-2-ready/ -->
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5376316241677971" data-ad-slot="6839290041" data-ad-format="auto"></ins>
+      <script>
                 (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
-        </div>
-    </footer>
-    <!-- inject:js -->
-    <!-- endinject -->
-    <script>
+    </div>
+  </footer>
+  <!-- inject:js -->
+  <!-- endinject -->
+  <script>
         System.config({
             packages: {
                 'build': { defaultExtension: 'js?v=<app-version>' }
@@ -64,4 +60,5 @@
         System.import('build/base/app/app').then(null, console.error.bind(console));
     </script>
 </body>
+
 </html>
